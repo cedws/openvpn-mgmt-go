@@ -197,6 +197,7 @@ func (s *Socket) Start() {
 }
 
 func (s *Socket) Close() error {
+	close(s.messageCh)
 	return s.conn.Close()
 }
 
