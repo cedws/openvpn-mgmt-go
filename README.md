@@ -9,6 +9,8 @@ import (
 	"log"
 
 	mgmt "github.com/cedws/openvpn-mgmt-go"
+	"github.com/cedws/openvpn-mgmt-go/command"
+	"github.com/cedws/openvpn-mgmt-go/event"
 )
 
 func main() {
@@ -23,10 +25,14 @@ func main() {
 }
 
 func handleFunc(v any) {
-	log.Println(v)
+	switch message := v.(type) {
+	case *event.ClientConnect:
+		log.Printf("client %v is connecting with key %v", message.ClientID, message.KeyID)
+	}
 }
 
 func errorFunc(v error) {
 	log.Println(v)
 }
+
 ```
