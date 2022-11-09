@@ -17,7 +17,7 @@ func main() {
 	s.HandleFunc(handleFunc)
 	s.ErrorFunc(errorFunc)
 
-    s.Dispatch(command.Bytecount{60})
+	s.Dispatch(command.Bytecount{60})
 
 	s.Start()
 }
