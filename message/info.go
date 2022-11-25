@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"fmt"
@@ -11,12 +11,12 @@ type Info struct {
 
 func (i *Info) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">INFO") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ":", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 
 	*i = Info{args[1]}

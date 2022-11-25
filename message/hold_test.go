@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 )
 
 func TestParseValidHold(t *testing.T) {
+	t.Parallel()
 	var n Hold
 
 	err := n.Parse(">HOLD:Waiting for hold release:10")

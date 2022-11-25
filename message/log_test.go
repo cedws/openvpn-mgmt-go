@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 )
 
 func TestParseValidLog(t *testing.T) {
+	t.Parallel()
 	var n Log
 
 	err := n.Parse(">LOG:1101519562,IFNWD,message")

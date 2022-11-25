@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 )
 
 func TestParseValidFatal(t *testing.T) {
+	t.Parallel()
 	var n Fatal
 
 	err := n.Parse(">FATAL:ity")

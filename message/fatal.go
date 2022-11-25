@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"fmt"
@@ -11,12 +11,12 @@ type Fatal struct {
 
 func (f *Fatal) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">FATAL") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ":", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 
 	*f = Fatal{args[1]}

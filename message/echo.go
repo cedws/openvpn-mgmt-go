@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"fmt"
@@ -13,16 +13,16 @@ type Echo struct {
 
 func (e *Echo) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">ECHO") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ":", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 	args = strings.SplitN(args[1], ",", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 
 	time, err := strconv.ParseInt(args[0], 10, 64)

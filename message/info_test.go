@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 )
 
 func TestParseValidInfo(t *testing.T) {
+	t.Parallel()
 	var n Info
 
 	err := n.Parse(">INFO:rmation")

@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 )
 
 func TestParseValidClientConnect(t *testing.T) {
+	t.Parallel()
 	var n ClientConnect
 
 	err := n.Parse(">CLIENT:CONNECT,1,0")
@@ -17,6 +18,7 @@ func TestParseValidClientConnect(t *testing.T) {
 }
 
 func TestParseInvalidClientConnect(t *testing.T) {
+	t.Parallel()
 	var n ClientConnect
 
 	err := n.Parse(">CLIENT:CONNECT,1,0,1")
@@ -24,6 +26,7 @@ func TestParseInvalidClientConnect(t *testing.T) {
 }
 
 func TestParseValidClientReauth(t *testing.T) {
+	t.Parallel()
 	var n ClientReauth
 
 	err := n.Parse(">CLIENT:REAUTH,1,0")
@@ -34,6 +37,7 @@ func TestParseValidClientReauth(t *testing.T) {
 }
 
 func TestParseInvalidClientReauth(t *testing.T) {
+	t.Parallel()
 	var n ClientReauth
 
 	err := n.Parse(">CLIENT:REAUTH,1,0,1")
@@ -41,6 +45,7 @@ func TestParseInvalidClientReauth(t *testing.T) {
 }
 
 func TestParseValidClientEnv(t *testing.T) {
+	t.Parallel()
 	var n ClientEnvVar
 
 	err := n.Parse(">CLIENT:ENV,go=good")
@@ -52,6 +57,7 @@ func TestParseValidClientEnv(t *testing.T) {
 }
 
 func TestParseValidClientEnvEnd(t *testing.T) {
+	t.Parallel()
 	var n ClientEnvVar
 
 	err := n.Parse(">CLIENT:ENV,END")
@@ -61,6 +67,7 @@ func TestParseValidClientEnvEnd(t *testing.T) {
 }
 
 func TestParseInvalidClientEnv(t *testing.T) {
+	t.Parallel()
 	var n ClientEnvVar
 
 	err := n.Parse(">CLIENT:ENV,")
@@ -68,6 +75,7 @@ func TestParseInvalidClientEnv(t *testing.T) {
 }
 
 func TestParseValidClientEstablished(t *testing.T) {
+	t.Parallel()
 	var n ClientEstablished
 
 	err := n.Parse(">CLIENT:ESTABLISHED,1")
@@ -77,6 +85,7 @@ func TestParseValidClientEstablished(t *testing.T) {
 }
 
 func TestParseInvalidClientEstablished(t *testing.T) {
+	t.Parallel()
 	var n ClientEstablished
 
 	err := n.Parse(">CLIENT:ESTABLISHED,")
@@ -84,6 +93,7 @@ func TestParseInvalidClientEstablished(t *testing.T) {
 }
 
 func TestParseValidClientDisconnect(t *testing.T) {
+	t.Parallel()
 	var n ClientDisconnect
 
 	err := n.Parse(">CLIENT:DISCONNECT,1")
@@ -93,6 +103,7 @@ func TestParseValidClientDisconnect(t *testing.T) {
 }
 
 func TestParseInvalidClientDisconnect(t *testing.T) {
+	t.Parallel()
 	var n ClientDisconnect
 
 	err := n.Parse(">CLIENT:DISCONNECT,")
@@ -100,6 +111,7 @@ func TestParseInvalidClientDisconnect(t *testing.T) {
 }
 
 func TestParseValidClientAddress(t *testing.T) {
+	t.Parallel()
 	var n ClientAddress
 
 	err := n.Parse(">CLIENT:ADDRESS,1,address,1")
@@ -111,6 +123,7 @@ func TestParseValidClientAddress(t *testing.T) {
 }
 
 func TestParseInvalidClientAddress(t *testing.T) {
+	t.Parallel()
 	var n ClientAddress
 
 	err := n.Parse(">CLIENT:ADDRESS,")
@@ -118,6 +131,7 @@ func TestParseInvalidClientAddress(t *testing.T) {
 }
 
 func TestParseValidClientChallengeResponse(t *testing.T) {
+	t.Parallel()
 	var n ClientChallengeResponse
 
 	err := n.Parse(">CLIENT:CR_RESPONSE,1,0,aGVsbG8K")
@@ -129,6 +143,7 @@ func TestParseValidClientChallengeResponse(t *testing.T) {
 }
 
 func TestParseInvalidClientChallengeResponse(t *testing.T) {
+	t.Parallel()
 	var n ClientChallengeResponse
 
 	err := n.Parse(">CLIENT:CR_RESPONSE,1,0")

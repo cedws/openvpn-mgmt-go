@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 )
 
 func TestParseValidEcho(t *testing.T) {
+	t.Parallel()
 	var n Echo
 
 	err := n.Parse(">ECHO:1101519562,forget-passwords")

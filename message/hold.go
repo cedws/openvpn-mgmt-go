@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"fmt"
@@ -13,12 +13,12 @@ type Hold struct {
 
 func (h *Hold) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">HOLD") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ":", 3)
 	if len(args) < 3 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 3 args")
 	}
 
 	wait, err := strconv.Atoi(args[2])

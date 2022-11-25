@@ -1,4 +1,4 @@
-package event
+package message
 
 import (
 	"fmt"
@@ -12,28 +12,28 @@ type ClientConnect struct {
 	Env      map[string]string
 }
 
-func (c *ClientConnect) Parse(line string) (err error) {
+func (c *ClientConnect) Parse(line string) error {
 	if !strings.HasPrefix(line, ">CLIENT:CONNECT") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ",", 3)
 	if len(args) < 3 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 3 args")
 	}
 
 	cid, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid client ID: %w", err)
+		return fmt.Errorf("invalid client id: %w", err)
 	}
 
 	kid, err := strconv.ParseInt(args[2], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid key ID: %w", err)
+		return fmt.Errorf("invalid key id: %w", err)
 	}
 
 	*c = ClientConnect{cid, kid, nil}
-	return
+	return nil
 }
 
 type ClientReauth struct {
@@ -42,28 +42,28 @@ type ClientReauth struct {
 	Env      map[string]string
 }
 
-func (c *ClientReauth) Parse(line string) (err error) {
+func (c *ClientReauth) Parse(line string) error {
 	if !strings.HasPrefix(line, ">CLIENT:REAUTH") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ",", 3)
 	if len(args) < 3 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 3 args")
 	}
 
 	cid, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid client ID: %w", err)
+		return fmt.Errorf("invalid client id: %w", err)
 	}
 
 	kid, err := strconv.ParseInt(args[2], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid key ID: %w", err)
+		return fmt.Errorf("invalid key id: %w", err)
 	}
 
 	*c = ClientReauth{cid, kid, nil}
-	return
+	return nil
 }
 
 type ClientEnvVar struct {
@@ -72,19 +72,19 @@ type ClientEnvVar struct {
 	Value string
 }
 
-func (c *ClientEnvVar) Parse(line string) (err error) {
+func (c *ClientEnvVar) Parse(line string) error {
 	if !strings.HasPrefix(line, ">CLIENT:ENV") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	if line == ">CLIENT:ENV,END" {
 		*c = ClientEnvVar{true, "", ""}
-		return
+		return nil
 	}
 
 	args := strings.SplitN(line, ",", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 
 	kv := strings.SplitN(args[1], "=", 2)
@@ -93,7 +93,7 @@ func (c *ClientEnvVar) Parse(line string) (err error) {
 	}
 
 	*c = ClientEnvVar{false, kv[0], kv[1]}
-	return
+	return nil
 }
 
 type ClientEstablished struct {
@@ -103,17 +103,17 @@ type ClientEstablished struct {
 
 func (c *ClientEstablished) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">CLIENT:ESTABLISHED") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ",", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 
 	cid, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid client ID: %w", err)
+		return fmt.Errorf("invalid client id: %w", err)
 	}
 
 	*c = ClientEstablished{cid, nil}
@@ -127,17 +127,17 @@ type ClientDisconnect struct {
 
 func (c *ClientDisconnect) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">CLIENT:DISCONNECT") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ",", 2)
 	if len(args) < 2 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 2 args")
 	}
 
 	cid, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid client ID: %w", err)
+		return fmt.Errorf("invalid client id: %w", err)
 	}
 
 	*c = ClientDisconnect{cid, nil}
@@ -152,17 +152,17 @@ type ClientAddress struct {
 
 func (c *ClientAddress) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">CLIENT:ADDRESS") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ",", 4)
 	if len(args) < 4 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 4 args")
 	}
 
 	cid, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid client ID: %w", err)
+		return fmt.Errorf("invalid client id: %w", err)
 	}
 
 	p, err := strconv.ParseBool(args[3])
@@ -182,22 +182,22 @@ type ClientChallengeResponse struct {
 
 func (c *ClientChallengeResponse) Parse(line string) (err error) {
 	if !strings.HasPrefix(line, ">CLIENT:CR_RESPONSE") {
-		return fmt.Errorf("invalid message")
+		return ErrMalformed
 	}
 
 	args := strings.SplitN(line, ",", 4)
 	if len(args) < 4 {
-		return fmt.Errorf("malformed message, not enough args")
+		return fmt.Errorf("expected at least 4 args")
 	}
 
 	cid, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid client ID: %w", err)
+		return fmt.Errorf("invalid client id: %w", err)
 	}
 
 	kid, err := strconv.ParseInt(args[2], 10, 64)
 	if err != nil {
-		return fmt.Errorf("invalid key ID: %w", err)
+		return fmt.Errorf("invalid key id: %w", err)
 	}
 
 	*c = ClientChallengeResponse{cid, kid, args[3]}
