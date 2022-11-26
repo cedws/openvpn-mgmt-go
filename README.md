@@ -1,5 +1,5 @@
 # openvpn-mgmt-go
-openvpn-mgmt-go provides an API for connecting to, receiving messages from, and sending commands to an OpenVPN management socket.
+Provides an API for connecting to, sending commands to, and receiving messages from an OpenVPN management socket.
 
 ## Example
 ```go
