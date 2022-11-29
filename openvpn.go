@@ -205,8 +205,7 @@ func (s *Socket) read() {
 	scanner := bufio.NewScanner(s.conn)
 	for scanner.Scan() {
 		line := scanner.Text()
-
-		if len(line) == 0 || line[0] != '>' {
+		if len(line) < 2 || line[0] != '>' {
 			continue
 		}
 
