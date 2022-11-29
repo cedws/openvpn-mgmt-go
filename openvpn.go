@@ -4,6 +4,7 @@ package openvpn
 
 import (
 	"bufio"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net"
@@ -25,6 +26,12 @@ const (
 	messageLog               = "LOG"
 )
 
+var (
+	ErrSCRV1Prefix       = fmt.Errorf("invalid SCRV1 string; no prefix")
+	ErrSCRV1Fields       = fmt.Errorf("invalid SCRV1 string; expected 3 fields")
+	ErrSCRV1InvalidField = fmt.Errorf("invalid SCRV1 string; field not base64")
+)
+
 type (
 	OnClientConnectFunc     func(message.ClientConnect)
 	OnClientReauthFunc      func(message.ClientReauth)
@@ -43,6 +50,37 @@ type Command interface {
 
 type Event interface {
 	Parse(string) error
+}
+
+type SCRV1 struct {
+	Password          string
+	ChallengeResponse string
+}
+
+func (s *SCRV1) DecodeString(line string) error {
+	if !strings.HasPrefix(line, "SCRV1:") {
+		return ErrSCRV1Prefix
+	}
+
+	split := strings.Split(line, ":")
+	if len(split) != 3 {
+		return ErrSCRV1Fields
+	}
+
+	password, err := base64.StdEncoding.DecodeString(split[1])
+	if err != nil {
+		return ErrSCRV1InvalidField
+	}
+
+	response, err := base64.StdEncoding.DecodeString(split[2])
+	if err != nil {
+		return ErrSCRV1InvalidField
+	}
+
+	s.Password = string(password)
+	s.ChallengeResponse = string(response)
+
+	return nil
 }
 
 type Socket struct {
